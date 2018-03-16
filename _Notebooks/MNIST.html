@@ -1,0 +1,347 @@
+---
+title : Handwritten
+permalink : /Projects/:title
+---
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/nav.css">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/tango.css">
+<!------ Include the above in your HEAD tag ---------->
+
+    <div id="wrapper">
+        <div class="overlay"></div>
+    
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                       Brand
+                    </a>
+                </li>
+                <li>
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Events</a>
+                </li>
+                <li>
+                    <a href="#">Team</a>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Works <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-header">Dropdown heading</li>
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/maridlcrmn">Follow me</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+    			<span class="hamb-middle"></span>
+				<span class="hamb-bottom"></span>
+            </button>
+            <div class="container-fluid">
+                <div class="row">
+                    <div style="padding: 0px;" class="col-lg-12">
+                       <div style="
+    height: 50%;
+    width: 100%;
+    position: relative;
+" class="image_overrelay">
+<div style="
+   
+position: absolute;
+    height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: -webkit-fill-available;
+    background: #3e3838;
+
+"><h1>Handwritten Digits Classification and Detection</h1>
+</div>
+<img class="image-banner" src="http://simonwinder.com/wp-content/uploads/2015/07/mnistExamples.png">	
+
+</div>
+                   
+                    </div>
+                </div>
+                 <div class="row Posts">
+<h2>About the Task</h2>
+<p>
+This is first Project as an  intro to deep learning.Deep Learning has been quite around a bit and is solving really complex problems.Deep learning has enaabled to acheive a sate of art performances oer various tasks like human face recognintion,object Detection and several NLP taks.
+
+This projects involves deep learning for recognition of handwritten digits . Later we shall also see how to deploy this model as an app .so that it could be used in a real life scenario.
+<br>
+<hr>
+</p>
+
+<h1>Exploring and Visualization</h1>
+<p>Now lets us begin by importing libraries of Python .We will be analyzing the data present and the features their types and the target variable </p>
+
+{% highlight python %}
+# linear algebra
+import numpy as np 
+
+# data processing, CSV file I/O (e.g. pd.read_csv)
+import pandas as pd 
+
+# Input data files are available in the "../input/" directory.
+# For example, running this (by clicking run or pressing Shift+Enter) will list the files in the input directory
+
+
+# Any results you write to the current directory are saved as output.
+
+
+{% endhighlight %}
+
+<p>Now lets load the dataset</p>
+{% highlight python %}
+
+#Load the Train Dataset 
+Digits_train = pd.read_csv('../input/train.csv')
+
+#Load the test Dataset
+Digits_test = pd.read_csv('../input/test.csv')
+{% endhighlight %}
+
+<p>Lets see how many training and testing samples we have got how many featues we have </p>
+{% highlight python%}
+Data = pd.concat([Digits_train,Digits_test],axis=0)
+Data.info()
+{% endhighlight %}
+<pre>
+<class 'pandas.core.frame.DataFrame'>
+Int64Index: 70000 entries, 0 to 27999
+Columns: 785 entries, label to pixel99
+dtypes: float64(1), int64(784)
+memory usage: 419.8 MB
+</pre>  
+<p>Now lets check wether we have any missing values or not</p>
+{%highlight python%}
+Digits_train.isnull().sum()
+{% endhighlight %}
+<pre class="output">
+		label       28000
+pixel0          0
+pixel1          0
+pixel10         0
+pixel100        0
+pixel101        0
+pixel102        0
+pixel103        0
+pixel104        0
+pixel105        0
+pixel106        0
+pixel107        0
+pixel108        0
+pixel109        0
+pixel11         0
+pixel110        0
+pixel111        0
+pixel112        0
+pixel113        0
+pixel114        0
+pixel115        0
+pixel116        0
+pixel117        0
+pixel118        0
+pixel119        0
+pixel12         0
+pixel120        0
+pixel121        0
+pixel122        0
+pixel123        0
+            ...  
+pixel784        0
+</pre>
+
+<p>We dont have any missing values in the train dataset.as we can see we have columns as label and pixel values from 1 to 784.Basically the MNIST dataset that we are using for classification is having 28x28 images which have been flattened to vector of pixels.
+</p>
+
+{% highlight python %}
+labels = Digits_train['label']
+Digits_train = Digits_train.drop(['label'],axis=1)
+{% endhighlight %}
+
+
+<p>Now lets visulaize some of the digits in the Data.As we have seen that the data provided to us are in format of <code>
+[sample,784 pixels]</code>.But inorder to visualize those images ,we need to reshape them as 28*28 images .
+Lets see how its done
+</p>
+{% highlight python %}
+import cv2 
+img = Digits_train.values.reshape(-1,28,28,1)
+import matplotlib.pyplot as plt
+plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+fig=plt.figure(figsize=(8, 8))
+for i in range(1,4):
+    imgs = img[i][:,:,0]
+    fig.add_subplot(1, 3, i)
+    plt.imshow(imgs)
+plt.show()    
+{% endhighlight %}
+
+<div class="images_results">	
+<img src="data:image/png;base64,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%0AzBuymZ1uZmvMbL2Zzc56/31hZjeb2RYze2q/2EgzW2hm60qPI/LMsTdmNtHMlpjZajNbZWYXl+KF%0AyD9NRao5qbh1R80lFanuilpzUnPVXaYN2cxaJF0v6QxJx6r7xt/HZplDH82XdHqP2GxJi9x9kqRF%0ApXGM9km61N2PkXSSpAtL/9ZFyT8VBaw5qbh1R82VFLDu5quYNSc1Ud1lfYR8oqT17r7B3fdIulPS%0AjIxzqJq7PyTppR7hGZJuKX1+i6SzM02qSu7e4e4rSp/vlLRa0ngVJP8UFarmpOLWHTWXUKi6K2rN%0ASc1Vd1k35PGSnt9vvLEUK5Ix7t4hdReCpNE551ORmR0m6XhJS1XA/OvUDDUnFezn1s9rTmqOuivc%0Az63odZd1Q7YyMZZ5N5CZHSjpbkmXuPuOvPPJATWXMWpOEnWXuWaou6wb8kZJE/cbT5C0KeMc6rXZ%0AzMZJUulxS8759MrMWtVdoLe7+z2lcGHyT0kz1JxUkJ8bNfdHzVB3hfm5NUvdZd2Ql0maZGaHm9kg%0ASedJuj/jHOp1v6QLSp9fIOm+HHPplZmZpHmSVrv7tft9qRD5p6gZak4qwM+NmktohrorxM+tqerO%0A3TP9kDRd0lpJz0i6Iuv99zHXOyR1SNqr7r94Z0o6RN0r9taVHkfmnWcvuZ+i7pfInpC0svQxvSj5%0Ap/xvUZiaK+VbyLqj5oJ/j8LUXVFrrpR709QdV+oCACACXKkLAIAI0JABAIgADRkAgAjQkAEAiAAN%0AGQCACNCQAQCIAA0ZAIAI0JABAIjA/wEmXFDCNZ4HqwAAAABJRU5ErkJggg==" alt="">
+
+
+<hr>
+<h1>Data Preprocessing</h1>
+<P>Now as we have visualized some of the data in the dataset.Lets gets ready for training our classifier on but lets wait.we need to preprocess our data so that our model is easy to train and  results are much better . </P>
+
+<p>we need to normalize our images because of varying intensities of pixel values.We know that pixel value ranges from 
+<code>0-255</code>.and images which we are dealing with are greyscaled images i.e most of them would e having pixel values as 0 or 255.Normalization basically compresses these varying intensities of pixel values .
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+<style type="text/css">
+*{
+font-family: 'Ubuntu';
+line-height: 1.6;
+}
+pre{
+	font-size: 15px;
+	margin-top: 2% auto;
+	display: block;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border: none;
+    line-height: 1.5;
+    color: #292b2c;
+
+}
+p {
+    font-size: 18px;
+    color: dimgrey;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    line-height: 2;
+}
+	.Posts{
+		padding :20px;
+		margin: 8%;
+
+	}
+	body{
+		line-height: 1.5;
+		padding: 0px;
+		margin:0px;
+	}
+	.output{
+		color: white;
+		background: black;
+	}
+
+</style>
+<script type="text/javascript">
+	$(document).ready(function () {
+  var trigger = $('.hamburger'),
+      overlay = $('.overlay'),
+     isClosed = false;
+
+    trigger.click(function () {
+      hamburger_cross();      
+    });
+
+    function hamburger_cross() {
+
+      if (isClosed == true) {          
+        overlay.hide();
+        trigger.removeClass('is-open');
+        trigger.addClass('is-closed');
+        isClosed = false;
+      } else {   
+        overlay.show();
+        trigger.removeClass('is-closed');
+        trigger.addClass('is-open');
+        isClosed = true;
+      }
+  }
+  
+  $('[data-toggle="offcanvas"]').click(function () {
+        $('#wrapper').toggleClass('toggled');
+  });  
+});
+</script>
+</body>
+</html>

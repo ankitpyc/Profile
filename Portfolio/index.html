@@ -1,0 +1,33 @@
+---
+layout: default
+title: Projects
+---
+
+<b>Check out some of My  Cool Web and Machine Learning Projects</b>
+<style type="text/css">
+	.project_card{
+		height : 40%;
+		width : 40%;
+		border: 1px solid #dfdfdf;
+	}
+	.card_layouts{
+		display: flex;
+		flex-wrap: true;
+	}
+</style>
+<div class="card_layouts">
+{% for projects in site.info_project %}
+
+  <div class="project_card">
+    <img src="{{projects.image_path}}" alt="{{ project.title }}">{{projects.title}}</a></h2>
+
+    {{ projects.content }}
+
+  </div>
+  {% endfor %}	
+
+</div>
+
+
+
+</html>
