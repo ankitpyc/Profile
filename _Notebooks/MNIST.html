@@ -200,6 +200,29 @@ plt.show()
 <p>we need to normalize our images because of varying intensities of pixel values.We know that pixel value ranges from 
 <code>0-255</code>.and images which we are dealing with are greyscaled images i.e most of them would e having pixel values as 0 or 255.Normalization basically compresses these varying intensities of pixel values .
 
+<hr>
+<h1>Train Test Split</h1>
+<p>Now lets split our train test data and ensure reproducibility by seeding.As data provided to us is already split into train and test .Just put a random seed and start training the Model</p>
+
+{% highlight python %}
+
+# Now lets set a random seed so that our results are reproducible
+seed = 5
+np.random.seed(seed)
+
+
+{% end highlight %}
+
+<hr>
+<h1>Convolutional Neural Networks</h1>
+
+<p>Convolutional Neural Networks are very similar to ordinary Neural Networks.Each neuron receives some inputs, performs a dot product and optionally follows it with a non-linearity. </p>
+
+<p>We could also use a traditional Neural Network like the feed forward neural network . But just imagine the situation.<
+the first layer of our Network would be a input layer consisting of our feature vector(input vectors).In our case feature vectors are the raw image pixels.28x28 pixels i.e 784 raw pixel values .and if we would be having a colured image of RGB channel this would resut in <code>2352</code> length feature vector.And our network would be having multiple hidden layers ,this even worsens the scenario. 
+
+<p>Convolutional Neural Networks on the other hand exloits spatial relationship between the pixel values.Unlike  </p>
+</p>
 </div>
 
 
