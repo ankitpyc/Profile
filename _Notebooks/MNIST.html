@@ -227,8 +227,7 @@ the first layer of our Network would be a input layer consisting of our feature 
 
 <h1>Model Building</h1>
 <p>We woluld be using <a href="https://keras.io/">Keras</a> and <a href="https://www.tensorflow.org/">Tensorflow</a> for Building Convolutional Neural Networks.</p>
-<ul>
-   <li>Preprocessing for Keras</li>
+   <h3>Preprocessing for Keras</h3>
    <p>For keras some preprocessing is required for feeding our data into model.we need to put our input images into a a partiular format.images we have are currently in form <code>[height,width,channel]</code> but keras need it input in a format <code>[no of samples,height,widht,channels]</code> </p>
    {% highlight python%}
    # reshapes values into [no of samples,height,width,channel]
@@ -236,7 +235,7 @@ the first layer of our Network would be a input layer consisting of our feature 
    # no of samples  =  1 indicates that we havent choosen our size and we can choose any random no of samples for training
    {% endhighlight %}   
 
-   <li>Encoding Labels</li>
+   <h3>Encoding Labels</h3>
    <p>We would be evaluating our model's perfomance on a multiclass classification metric. i.e cross entropy with logits 
     keras has this evaluation metric predifined.but it requires labels to <code>one-hot-encoded</code>.
     So lets convert our labels into one hot encoded vectors.
@@ -246,7 +245,7 @@ the first layer of our Network would be a input layer consisting of our feature 
     {% endhighlight %}
    </p>
 
-<li>Lets define our models</li>
+<h2>Lets define our models</h2>
 {%highlight python%}
 from keras.models import Sequential
 from keras.layers import Dense,Conv2D,MaxPool2D,Flatten,Dropout
