@@ -220,9 +220,134 @@ np.random.seed(seed)
 
 <p>We could also use a traditional Neural Network like the feed forward neural network . But just imagine the situation.<
 the first layer of our Network would be a input layer consisting of our feature vector(input vectors).In our case feature vectors are the raw image pixels.28x28 pixels i.e 784 raw pixel values .and if we would be having a colured image of RGB channel this would resut in <code>2352</code> length feature vector.And our network would be having multiple hidden layers ,this even worsens the scenario. 
-
-<p>Convolutional Neural Networks on the other hand exloits spatial relationship between the pixel values.Unlike  </p>
 </p>
+<p>Convolutional Neural Networks on the other hand exloits spatial relationship between the pixel values.Unlike  </p>
+
+<hr>
+
+<h1>Model Building</h1>
+<p>We woluld be using <a href="https://keras.io/">Keras</a> and <a href="https://www.tensorflow.org/">Tensorflow</a> for Building Convolutional Neural Networks.</p>
+<ul>
+   <li>Preprocessing for Keras</li>
+   <p>For keras some preprocessing is required for feeding our data into model.we need to put our input images into a a partiular format.images we have are currently in form <code>[height,width,channel]</code> but keras need it input in a format <code>[no of samples,height,widht,channels]</code> </p>
+   {% highlight python%}
+   # reshapes values into [no of samples,height,width,channel]
+   images = Digits_train.values.reshape(-1,28,28,1)
+   # no of samples  =  1 indicates that we havent choosen our size and we can choose any random no of samples for training
+   {% endhighlight %}   
+
+   <li>Encoding Labels</li>
+   <p>We would be evaluating our model's perfomance on a multiclass classification metric. i.e cross entropy with logits 
+    keras has this evaluation metric predifined.but it requires labels to <code>one-hot-encoded</code>.
+    So lets convert our labels into one hot encoded vectors.
+    {% highlight python%}
+    from keras.utils.np_utils import to_categorical
+    labels = to_categorical(labels)
+    {% endhighlight %}
+   </p>
+
+<li>Lets define our models</li>
+{%hightlight python%}
+from keras.models import Sequential
+from keras.layers import Dense,Conv2D,MaxPool2D,Flatten,Dropout
+from keras.activations import relu,softmax
+def CNN_model():
+    model = Sequential()
+    model.add(Conv2D(64,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
+    model.add(MaxPool2D())
+    model.add(Conv2D(32,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
+    model.add(MaxPool2D())
+    model.add(Conv2D(16,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
+    model.add(MaxPool2D())
+    model.add(Dropout(0.5))
+    model.add(Flatten())
+    model.add(Dense(128))
+    model.add(Dropout(0.5))
+    model.add(Dense(10,activation = "softmax"))
+    return model       
+{% endhighlight %}
+
+{% hightlight python%}
+CNN_model().summary()
+{% endhighlight %}
+<pre class="output">
+    ________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_1 (Conv2D)            (None, 28, 28, 64)        640       
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 14, 14, 64)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 14, 14, 32)        18464     
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 7, 7, 32)          0         
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 7, 7, 16)          4624      
+_________________________________________________________________
+max_pooling2d_3 (MaxPooling2 (None, 3, 3, 16)          0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 3, 3, 16)          0         
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 144)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 128)               18560     
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 128)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 10)                1290      
+=================================================================
+Total params: 43,578
+Trainable params: 43,578
+Non-trainable params: 0
+_________________________________________________________________
+</pre>
+
+</ul>
+
+<hr>
+<h1>Compile and Run our model</h1>
+<p>Since we have now defined our model , we will just need to define the loss function evaluation metrics and epochs.</p> {%highlight pyhton%}
+model = CNN_model()
+model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+{% endhightlight %}
+ {%highlight pyhton%}
+history = model.fit(img,labels,epochs=10, batch_size =50,validation_split=0.2,verbose=2,shuffle=False)
+{% endhightlight %}
+
+<pre class="output">
+Train on 33600 samples, validate on 8400 samples
+Epoch 1/10
+ - 65s - loss: 0.6216 - acc: 0.7924 - val_loss: 0.1098 - val_acc: 0.9671
+Epoch 2/10
+ - 67s - loss: 0.2327 - acc: 0.9252 - val_loss: 0.0763 - val_acc: 0.9777
+Epoch 3/10
+ - 65s - loss: 0.1782 - acc: 0.9452 - val_loss: 0.0641 - val_acc: 0.9804
+Epoch 4/10
+ - 66s - loss: 0.1494 - acc: 0.9550 - val_loss: 0.0524 - val_acc: 0.9837
+Epoch 5/10
+ - 65s - loss: 0.1321 - acc: 0.9583 - val_loss: 0.0507 - val_acc: 0.9850
+Epoch 6/10
+ - 66s - loss: 0.1202 - acc: 0.9632 - val_loss: 0.0513 - val_acc: 0.9846
+Epoch 7/10
+ - 66s - loss: 0.1157 - acc: 0.9640 - val_loss: 0.0455 - val_acc: 0.9876
+Epoch 8/10
+ - 66s - loss: 0.1042 - acc: 0.9676 - val_loss: 0.0439 - val_acc: 0.9865
+Epoch 9/10
+ - 67s - loss: 0.0995 - acc: 0.9693 - val_loss: 0.0404 - val_acc: 0.9882
+Epoch 10/10
+ - 65s - loss: 0.0908 - acc: 0.9713 - val_loss: 0.0383 - val_acc: 0.9886
+</pre>
+
+<p>we have trained our model on 10 epochs.20 % data has been set aside for validation.</p>
+
+
+{% highlight python %}
+plt.plot(history.history['acc'], label='train')
+plt.plot(history.history['val_acc'], label='test')
+plt.legend()
+{% endhighlight %}
+<br/>
+<img src="https://www.kaggleusercontent.com/kf/2814821/eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..VgT6J3gxPWBoWkubAK1hfw.2Ld8FmG29X9GfZJHbcoPUoiZoPKU1kTDdwIde219m1FaMD0COuHAIJDrv3v4TkrUjTVP85-aoj2wwIjeIkSWjdk0VozNpSDDNSAemxSTugenmTgNme7l0Cpm7lTPIkCu.xWhO_BZwQ3drU3BB1shBQw/__results___files/__results___23_1.png">
 </div>
 
 
