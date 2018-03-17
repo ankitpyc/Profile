@@ -62,7 +62,7 @@ position: absolute;
     justify-content: center;
     width: 100%;
     height: -webkit-fill-available;
-    background: #3e3838;
+    background: #22114ea6;
 
 "><h1 class="text-center" style="color:white;">Handwritten Digits Classification and Detection</h1>
 </div>
@@ -346,7 +346,8 @@ plt.plot(history.history['val_acc'], label='test')
 plt.legend()
 {% endhighlight %}
 <br/>
-<img src="https://www.kaggleusercontent.com/kf/2814821/eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..VgT6J3gxPWBoWkubAK1hfw.2Ld8FmG29X9GfZJHbcoPUoiZoPKU1kTDdwIde219m1FaMD0COuHAIJDrv3v4TkrUjTVP85-aoj2wwIjeIkSWjdk0VozNpSDDNSAemxSTugenmTgNme7l0Cpm7lTPIkCu.xWhO_BZwQ3drU3BB1shBQw/__results___files/__results___23_1.png">
+<img src="{{site.url}}{{ "/assets/Mnist/acc.png" }}" >
+
 </div>
 
 
@@ -414,6 +415,12 @@ line-height: 1.6;
 	h1{
 	font-size : 23px;
 	}
+}
+.image-banner{
+        width: 100%;
+    height: 100%;
+    max-width: 100%;
+    background-size: cover !important;
 }
 pre{
 	font-size: 15px;
