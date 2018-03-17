@@ -247,7 +247,7 @@ the first layer of our Network would be a input layer consisting of our feature 
    </p>
 
 <li>Lets define our models</li>
-{%hightlight python%}
+{%highlight python%}
 from keras.models import Sequential
 from keras.layers import Dense,Conv2D,MaxPool2D,Flatten,Dropout
 from keras.activations import relu,softmax
@@ -267,7 +267,7 @@ def CNN_model():
     return model       
 {% endhighlight %}
 
-{% hightlight python%}
+{% highlight python%}
 CNN_model().summary()
 {% endhighlight %}
 <pre class="output">
@@ -309,10 +309,10 @@ _________________________________________________________________
 <p>Since we have now defined our model , we will just need to define the loss function evaluation metrics and epochs.</p> {%highlight pyhton%}
 model = CNN_model()
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-{% endhightlight %}
+{% endhighlight %}
  {%highlight pyhton%}
 history = model.fit(img,labels,epochs=10, batch_size =50,validation_split=0.2,verbose=2,shuffle=False)
-{% endhightlight %}
+{% endhighlight %}
 
 <pre class="output">
 Train on 33600 samples, validate on 8400 samples
