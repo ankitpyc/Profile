@@ -377,8 +377,37 @@ plt.plot(history.history['val_acc'], label='test')
 plt.legend()
 {% endhighlight %}
 <br/>
-<img src="{{site.url}}{{ "/assets/Mnist/acc.png" }}" >
+<img src="{{site.baseurl}}{{"/assets/Mnist/acc.png" }}" >
+<p>The above graph clearly indicates how out model performs  both on the test set and validation set.we have used 20% of our training data as our validation set</p>
+<p>Clearly our model performs well on the train set with accuracy of about <code>97.13%</code> and on our validation set
+<code>98.86%</code>.Overfitting occours when accuracy on the train data is higher than the validation dataset or the test dataset</p>
 
+<hr>
+<h1>Predictions</h1>
+<p>Now we will check our predictions on the testing dataset .lets verify by classifying one image from the dataset as well as plottting it.</p>
+<p>But before predicting our output we need to transform our test data into format data and do some preprocessing i.e normalizing pixel intensities.</p>
+
+{% highlight python %}
+Digits_test = Digits_test/255.0
+Digits_test = Digits_test.values.reshape(-1,28,28,1)
+{% endhighlight %}
+
+{% highlight python %}
+plt.imshow(Digits_test[4][:,:,0])
+{% endhighlight %}
+
+<img src="{{site.baseurl}}{{"/assets/Mnist/prediction.png"}}">
+<p>Clearly the image shows that the image is that of number 3.Lets verify it by predciting it</p>
+{% highlight python %}
+label = model.predict(Digits_test[4].reshape(-1,28,28,1))
+print label
+{% endhighlight %}
+<pre class="output">
+    array([[1.35892244e-11, 6.63674093e-09, 1.89812010e-06, 9.99997854e-01,
+        5.45060850e-13, 7.55617506e-08, 2.06700043e-12, 1.03831745e-07,
+        1.64455578e-08, 2.63139732e-09]], dtype=float32)
+</pre>
+<p>In the last layer of Convolutional Neural Networks ,we have used a softmax classifier.It output probabilities of various classes i.e Ten probabilities coressponding to digits <code>0-9</code>.If you observe carefully the index 3 of the array has the probability 0.99 which is the number 3 class of our dataset.</p>
 </div>
 
 
