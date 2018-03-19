@@ -1,34 +1,49 @@
 ---
 layout: default
 title: Projects
+
 ---
 
 <b>Check out some of My  Cool Web and Machine Learning Projects</b>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/nav.css">
+<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <style type="text/css">
-	.project_card{
-		height : 40%;
-		width : 40%;
-		border: 1px solid #dfdfdf;
-	}
+	.project_card {
+       margin: 4% auto;
+    padding: 20px;
+    width: 100%;
+    border: 1px solid #dfdfdf;
+}
 	.card_layouts{
 		display: flex;
 		flex-wrap: true;
 	}
+	.notebook_button{
+	background: black;
+    padding: 10px;
+    color: white !important;
+    border-radius: 2px;
+	}
 </style>
-<div class="card_layouts">
+<div class="card_layouts container">
+	<div class="row">
 {% for projects in site.project_details %}
 
   <div class="project_card">
-    <img src="{{projects.image_path}}" alt="{{ project.title }}">{{projects.title}}</a></h2>
+    <img style="width: 100%;" src="{{projects.image_path}}" alt="{{ project.title }}">{{projects.title}}</a></h2>
 
     {{ projects.content }}
 
-<a href="{{site.baseurl}}{{projects.project_path}}">Jupyter Notebook</a>
+<a class="notebook_button" href="{{site.baseurl}}{{projects.project_path}}">Jupyter Notebook</a>
   </div>
   {% endfor %}	
 
 </div>
 
-
+</div>
 
 </html>
