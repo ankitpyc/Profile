@@ -1,9 +1,7 @@
 ---
-title: Quora Question Pairs
-permalink : /Projects/:title
-image_path: https://cdn2.iconfinder.com/data/icons/Quora-Icons/256/Quora-2.png
-tags : []
-project_path : Quora Question Pairs.html
+title: Recommender System
+image_path: https://cdn-images-1.medium.com/max/672/1*_R6Qhi8dbLe8jvVKlGdHYw.png
+project_path : Movie_Recommender
 ---
 The MNIST database of handwritten digits, available from this page, has a training set of 60,000 examples, and a test set of 10,000 examples. It is a subset of a larger set available from NIST. The digits have been size-normalized and centered in a fixed-size image.
 

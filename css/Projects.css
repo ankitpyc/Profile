@@ -7,3 +7,13 @@
 	align-items: center;
 
 }
+.banner_head{
+	position: absolute;
+    height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: -webkit-fill-available;
+    background: #3e3838;
+}
