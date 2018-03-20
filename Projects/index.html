@@ -1,7 +1,5 @@
 ---
-layout: default
 title: Projects
-
 ---
 
 <b>Check out some of My  Cool Web and Machine Learning Projects</b>
@@ -14,9 +12,10 @@ title: Projects
 <style type="text/css">
 	.project_card {
        margin: 4% auto;
-    padding: 20px;
-    width: 100%;
     border: 1px solid #dfdfdf;
+}
+.project_card_info{
+padding: 10px;
 }
 	.card_layouts{
 		display: flex;
@@ -29,21 +28,72 @@ title: Projects
     border-radius: 2px;
 	}
 </style>
+  <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+               <li class="" style="
+    text-align: center;
+    background: #000000;
+"> 
+                 <img src="https://scontent.fbho1-1.fna.fbcdn.net/v/t1.0-1/p160x160/24176670_1494666630649404_7505247795837322239_n.jpg?_nc_cat=0&amp;oh=8b160fed68b34d89bfa5587f3fc6d403&amp;oe=5B32B2C8" style="
+    border-radius: 200px;
+    height: 100px;
+    width: 100px;
+    margin: 14% auto;
+    padding: 9px;
+    border: 1px double #664e90;
+">
+        
+                </li>
+                <li class="sidebar-brand">
+                    <a href="#">
+                       Ankit Mishra
+                    </a>
+                </li>
+                <li>
+                    <a href="{{site.url}}">Home</a>
+		    </li>
+                <li>
+                    <a href="#">Projects</a>
+                </li>
+                <li>
+                   <a href="#">About</a> 
+                </li>
+                <li>
+                    <a href="#">Contact me</a>
+                </li>
+            </ul>
+            <div style="height: 10%;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    align-items: center;
+    display: flex;
+    color: white !important;
+    justify-content: space-around;" class="footer-nav">
+                <a href=""><i class="fa fa-1x fa-github"></i></a>
+                <a href=""><i class="fa fa-1x fa-facebook"></i></a>
+                <a href=""> <i class="fa fa-1x fa-gmail"></i> </a>
+            </div>
+        </nav>
 <div class="card_layouts container">
-	<div class="row">
 {% for projects in site.project_details %}
+	<div class="row">
 
-  <div class="project_card">
-    <img style="width: 100%;" src="{{projects.image_path}}" alt="{{ project.title }}">{{projects.title}}</a></h2>
+  <div class="col-md-4 col-xs-12 col-sm-12">
+    <div class="project_card">
+    	<div class="project_card_info">    <img style="width: 100%;" src="{{projects.image_path}}" alt="{{ project.title }}">
+    	{{projects.title}}</a></h2>
 
     {{ projects.content }}
 
 <a class="notebook_button" href="{{site.baseurl}}{{projects.project_path}}">Jupyter Notebook</a>
   </div>
+  </div>
+
   {% endfor %}	
-
+</div>
 </div>
 
-</div>
 
 </html>

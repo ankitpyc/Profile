@@ -38,19 +38,16 @@ permalink : /Projects/:title
                     </a>
                 </li>
                 <li>
-                    <a href="#">Home</a>
+                    <a href="{{site.url}}">Home</a>
 		    </li>
                 <li>
-                    <a href="#">Profile</a>
+                    <a href="#">Projects</a>
                 </li>
                 <li>
                    <a href="#">About</a> 
                 </li>
                 <li>
                     <a href="#">Contact me</a>
-                </li>
-                <li>
-                    <a href="https://twitter.com/maridlcrmn">Follow me</a>
                 </li>
             </ul>
             <div style="height: 10%;
@@ -105,310 +102,145 @@ position: absolute;
                 </div>
                  <div class="row">
                  	<div class="col-md-8 col-md-offset-2 col-sm-8 col-md-offset-2 col-xs-12 ">
-<h2>About the Task</h2>
+<hr>
+<h2>About the Project</h2>
 <p>
-This is first Project as an  intro to deep learning.Deep Learning has been quite around a bit and is solving really complex problems.Deep learning has enaabled to acheive a sate of art performances oer various tasks like human face recognintion,object Detection and several NLP taks.
-
-This projects involves deep learning for recognition of handwritten digits . Later we shall also see how to deploy this model as an app .so that it could be used in a real life scenario.
+In this I will be building a Movie Recommender System based on IMDB Dataset.Recommender System are quite useful and popular these.wether it be an ecommerce company or food Delivery Service,Everyone requires a recommender system.It helps them to understand their customers while it also provides a smooth userflow for the users to go through the website.Throughout this Notebook ,I will be discussing various Approaches to build a recommender system ,common algorthims to build a recommender system and also a small demo of how recommendation will be shown to the user. 
 <br>
 <hr>
 </p>
 
 <h1>Exploring and Visualization</h1>
-<p>Now lets us begin by importing libraries of Python .We will be analyzing the data present and the features their types and the target variable </p>
+
+<p>The Dataset we are using for this project can be found <a href="#">here</a>.The Dataset comprises of 2 csv files.Lets import our libraries and see what data we have in the csv file</p>
 
 {% highlight python %}
 # linear algebra
 import numpy as np 
 
 # data processing, CSV file I/O (e.g. pd.read_csv)
-import pandas as pd 
-
-# Input data files are available in the "../input/" directory.
-# For example, running this (by clicking run or pressing Shift+Enter) will list the files in the input directory
-
-
-# Any results you write to the current directory are saved as output.
-
-
-{% endhighlight %}
-
-<p>Now lets load the dataset</p>
-{% highlight python %}
-
-#Load the Train Dataset 
-Digits_train = pd.read_csv('../input/train.csv')
-
-#Load the test Dataset
-Digits_test = pd.read_csv('../input/test.csv')
-{% endhighlight %}
-
-<p>Lets see how many training and testing samples we have got how many featues we have </p>
-{% highlight python%}
-Data = pd.concat([Digits_train,Digits_test],axis=0)
-Data.info()
-{% endhighlight %}
-<pre>
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 70000 entries, 0 to 27999
-Columns: 785 entries, label to pixel99
-dtypes: float64(1), int64(784)
-memory usage: 419.8 MB
-</pre>  
-<p>Now lets check wether we have any missing values or not</p>
-{%highlight python%}
-Digits_train.isnull().sum()
-{% endhighlight %}
-<pre class="output">
-		label       28000
-pixel0          0
-pixel1          0
-pixel10         0
-pixel100        0
-pixel101        0
-pixel102        0
-pixel103        0
-pixel104        0
-pixel105        0
-pixel106        0
-pixel107        0
-pixel108        0
-pixel109        0
-pixel11         0
-pixel110        0
-pixel111        0
-pixel112        0
-pixel113        0
-pixel114        0
-pixel115        0
-pixel116        0
-pixel117        0
-pixel118        0
-pixel119        0
-pixel12         0
-pixel120        0
-pixel121        0
-pixel122        0
-pixel123        0
-            ...  
-pixel784        0
-</pre>
-
-<p>We dont have any missing values in the train dataset.as we can see we have columns as label and pixel values from 1 to 784.Basically the MNIST dataset that we are using for classification is having 28x28 images which have been flattened to vector of pixels.
-</p>
-
-{% highlight python %}
-labels = Digits_train['label']
-Digits_train = Digits_train.drop(['label'],axis=1)
-{% endhighlight %}
-
-
-<p>Now lets visulaize some of the digits in the Data.As we have seen that the data provided to us are in format of <code>
-[sample,784 pixels]</code>.But inorder to visualize those images ,we need to reshape them as 28*28 images .
-Lets see how its done
-</p>
-{% highlight python %}
-import cv2 
-img = Digits_train.values.reshape(-1,28,28,1)
+import pandas as pd
+# for visualizations and plotting graphs
 import matplotlib.pyplot as plt
-plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
-fig=plt.figure(figsize=(8, 8))
-for i in range(1,4):
-    imgs = img[i][:,:,0]
-    fig.add_subplot(1, 3, i)
-    plt.imshow(imgs)
-plt.show()    
+import seaborn as sns
+#setting the style of grids
+sns.set_style('whitegrid')
 {% endhighlight %}
 
-<div class="images_results">	
-<img src="data:image/png;base64,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%0AzBuymZ1uZmvMbL2Zzc56/31hZjeb2RYze2q/2EgzW2hm60qPI/LMsTdmNtHMlpjZajNbZWYXl+KF%0AyD9NRao5qbh1R80lFanuilpzUnPVXaYN2cxaJF0v6QxJx6r7xt/HZplDH82XdHqP2GxJi9x9kqRF%0ApXGM9km61N2PkXSSpAtL/9ZFyT8VBaw5qbh1R82VFLDu5quYNSc1Ud1lfYR8oqT17r7B3fdIulPS%0AjIxzqJq7PyTppR7hGZJuKX1+i6SzM02qSu7e4e4rSp/vlLRa0ngVJP8UFarmpOLWHTWXUKi6K2rN%0ASc1Vd1k35PGSnt9vvLEUK5Ix7t4hdReCpNE551ORmR0m6XhJS1XA/OvUDDUnFezn1s9rTmqOuivc%0Az63odZd1Q7YyMZZ5N5CZHSjpbkmXuPuOvPPJATWXMWpOEnWXuWaou6wb8kZJE/cbT5C0KeMc6rXZ%0AzMZJUulxS8759MrMWtVdoLe7+z2lcGHyT0kz1JxUkJ8bNfdHzVB3hfm5NUvdZd2Ql0maZGaHm9kg%0ASedJuj/jHOp1v6QLSp9fIOm+HHPplZmZpHmSVrv7tft9qRD5p6gZak4qwM+NmktohrorxM+tqerO%0A3TP9kDRd0lpJz0i6Iuv99zHXOyR1SNqr7r94Z0o6RN0r9taVHkfmnWcvuZ+i7pfInpC0svQxvSj5%0Ap/xvUZiaK+VbyLqj5oJ/j8LUXVFrrpR709QdV+oCACACXKkLAIAI0JABAIgADRkAgAjQkAEAiAAN%0AGQCACNCQAQCIAA0ZAIAI0JABAIjA/wEmXFDCNZ4HqwAAAABJRU5ErkJggg==" alt="">
-
-
-<hr>
-<h1>Data Preprocessing</h1>
-<P>Now as we have visualized some of the data in the dataset.Lets gets ready for training our classifier on but lets wait.we need to preprocess our data so that our model is easy to train and  results are much better . </P>
-
-<p>we need to normalize our images because of varying intensities of pixel values.We know that pixel value ranges from 
-<code>0-255</code>.and images which we are dealing with are greyscaled images i.e most of them would e having pixel values as 0 or 255.Normalization basically compresses these varying intensities of pixel values .
-
-<hr>
-<h1>Train Test Split</h1>
-<p>Now lets split our train test data and ensure reproducibility by seeding.As data provided to us is already split into train and test .Just put a random seed and start training the Model</p>
-
+<p>There are two files <code>tmdb_5000_movies.csv</code> and <code>tmdb_5000_credits.csv</code>.Lets go through them one by one</p>
 {% highlight python %}
 
-# Now lets set a random seed so that our results are reproducible
-seed = 5
-np.random.seed(seed)
+#Load the First csv File 
+data_movies = pd.read_csv('Data/tmdb_5000_movies.csv')
 
-
+#Load the second csv File 
+data_credits = pd.read_csv('Data/tmdb_5000_credits.csv')
 {% endhighlight %}
 
-<hr>
-<h1>Convolutional Neural Networks</h1>
-
-<p>Convolutional Neural Networks are very similar to ordinary Neural Networks.Each neuron receives some inputs, performs a dot product and optionally follows it with a non-linearity. </p>
-
-<p>We could also use a traditional Neural Network like the feed forward neural network . But just imagine the situation.<
-the first layer of our Network would be a input layer consisting of our feature vector(input vectors).In our case feature vectors are the raw image pixels.28x28 pixels i.e 784 raw pixel values .and if we would be having a colured image of RGB channel this would resut in <code>2352</code> length feature vector.And our network would be having multiple hidden layers ,this even worsens the scenario. 
-</p>
-<p>Convolutional Neural Networks on the other hand exloits spatial relationship between the pixel values.Unlike  </p>
-
-<hr>
-
-<h1>Model Building</h1>
-<p>We woluld be using <a href="https://keras.io/">Keras</a> and <a href="https://www.tensorflow.org/">Tensorflow</a> for Building Convolutional Neural Networks.</p>
-   <h3>Preprocessing for Keras</h3>
-   <p>For keras some preprocessing is required for feeding our data into model.we need to put our input images into a a partiular format.images we have are currently in form <code>[height,width,channel]</code> but keras need it input in a format <code>[no of samples,height,widht,channels]</code> </p>
-   {% highlight python%}
-   # reshapes values into [no of samples,height,width,channel]
-   images = Digits_train.values.reshape(-1,28,28,1)
-   # no of samples  =  1 indicates that we havent choosen our size and we can choose any random no of samples for training
-   {% endhighlight %}   
-
-   <h3>Encoding Labels</h3>
-   <p>We would be evaluating our model's perfomance on a multiclass classification metric. i.e cross entropy with logits 
-    keras has this evaluation metric predifined.but it requires labels to <code>one-hot-encoded</code>.
-    So lets convert our labels into one hot encoded vectors.
-    {% highlight python%}
-    from keras.utils.np_utils import to_categorical
-    labels = to_categorical(labels)
-    {% endhighlight %}
-   </p>
-
-<h2>Lets define our models</h2>
-{%highlight python%}
-from keras.models import Sequential
-from keras.layers import Dense,Conv2D,MaxPool2D,Flatten,Dropout
-from keras.activations import relu,softmax
-def CNN_model():
-    model = Sequential()
-    model.add(Conv2D(64,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
-    model.add(MaxPool2D())
-    model.add(Conv2D(32,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
-    model.add(MaxPool2D())
-    model.add(Conv2D(16,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
-    model.add(MaxPool2D())
-    model.add(Dropout(0.5))
-    model.add(Flatten())
-    model.add(Dense(128))
-    model.add(Dropout(0.5))
-    model.add(Dense(10,activation = "softmax"))
-    return model       
+{% highlight python %}
+#Print the first 1 rows of the data_movies 
+data_movies.head(1)
 {% endhighlight %}
 
+    <table border="1" class="table table-responsive table-bordered">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>budget</th>
+      <th>genres</th>
+      <th>homepage</th>
+      <th>id</th>
+      <th>keywords</th>
+      <th>original_language</th>
+      <th>original_title</th>
+      <th>overview</th>
+      <th>popularity</th>
+      <th>production_companies</th>
+      <th>production_countries</th>
+      <th>release_date</th>
+      <th>revenue</th>
+      <th>runtime</th>
+      <th>spoken_languages</th>
+      <th>status</th>
+      <th>tagline</th>
+      <th>title</th>
+      <th>vote_average</th>
+      <th>vote_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>237000000</td>
+      <td>[{"id": 28, "name": "Action"}, {"id": 12, "nam...</td>
+      <td>http://www.avatarmovie.com/</td>
+      <td>19995</td>
+      <td>[{"id": 1463, "name": "culture clash"}, {"id":...</td>
+      <td>en</td>
+      <td>Avatar</td>
+      <td>In the 22nd century, a paraplegic Marine is di...</td>
+      <td>150.437577</td>
+      <td>[{"name": "Ingenious Film Partners", "id": 289...</td>
+      <td>[{"iso_3166_1": "US", "name": "United States o...</td>
+      <td>2009-12-10</td>
+      <td>2787965087</td>
+      <td>162.0</td>
+      <td>[{"iso_639_1": "en", "name": "English"}, {"iso...</td>
+      <td>Released</td>
+      <td>Enter the World of Pandora.</td>
+      <td>Avatar</td>
+      <td>7.2</td>
+      <td>11800</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Now lets understand what each feature is</p>
 {% highlight python%}
-CNN_model().summary()
+data_movies.columns
 {% endhighlight %}
 <pre class="output">
-    ________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-conv2d_1 (Conv2D)            (None, 28, 28, 64)        640       
-_________________________________________________________________
-max_pooling2d_1 (MaxPooling2 (None, 14, 14, 64)        0         
-_________________________________________________________________
-conv2d_2 (Conv2D)            (None, 14, 14, 32)        18464     
-_________________________________________________________________
-max_pooling2d_2 (MaxPooling2 (None, 7, 7, 32)          0         
-_________________________________________________________________
-conv2d_3 (Conv2D)            (None, 7, 7, 16)          4624      
-_________________________________________________________________
-max_pooling2d_3 (MaxPooling2 (None, 3, 3, 16)          0         
-_________________________________________________________________
-dropout_1 (Dropout)          (None, 3, 3, 16)          0         
-_________________________________________________________________
-flatten_1 (Flatten)          (None, 144)               0         
-_________________________________________________________________
-dense_1 (Dense)              (None, 128)               18560     
-_________________________________________________________________
-dropout_2 (Dropout)          (None, 128)               0         
-_________________________________________________________________
-dense_2 (Dense)              (None, 10)                1290      
-=================================================================
-Total params: 43,578
-Trainable params: 43,578
-Non-trainable params: 0
-_________________________________________________________________
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4803 entries, 0 to 4802
+Data columns (total 20 columns):
+budget                  4803 non-null int64
+genres                  4803 non-null object
+homepage                1712 non-null object
+id                      4803 non-null int64
+keywords                4803 non-null object
+original_language       4803 non-null object
+original_title          4803 non-null object
+overview                4800 non-null object
+popularity              4803 non-null float64
+production_companies    4803 non-null object
+production_countries    4803 non-null object
+release_date            4802 non-null object
+revenue                 4803 non-null int64
+runtime                 4801 non-null float64
+spoken_languages        4803 non-null object
+status                  4803 non-null object
+tagline                 3959 non-null object
+title                   4803 non-null object
+vote_average            4803 non-null float64
+vote_count              4803 non-null int64
+dtypes: float64(3), int64(4), object(13)
+memory usage: 750.5+ KB
+None
 </pre>
 
-</ul>
-
-<hr>
-<h1>Compile and Run our model</h1>
-<p>Since we have now defined our model , we will just need to define the loss function evaluation metrics and epochs.</p> {%highlight pyhton%}
-model = CNN_model()
-model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-{% endhighlight %}
- {%highlight pyhton%}
-history = model.fit(img,labels,epochs=10, batch_size =50,validation_split=0.2,verbose=2,shuffle=False)
-{% endhighlight %}
-
-<pre class="output">
-Train on 33600 samples, validate on 8400 samples
-Epoch 1/10
- - 65s - loss: 0.6216 - acc: 0.7924 - val_loss: 0.1098 - val_acc: 0.9671
-Epoch 2/10
- - 67s - loss: 0.2327 - acc: 0.9252 - val_loss: 0.0763 - val_acc: 0.9777
-Epoch 3/10
- - 65s - loss: 0.1782 - acc: 0.9452 - val_loss: 0.0641 - val_acc: 0.9804
-Epoch 4/10
- - 66s - loss: 0.1494 - acc: 0.9550 - val_loss: 0.0524 - val_acc: 0.9837
-Epoch 5/10
- - 65s - loss: 0.1321 - acc: 0.9583 - val_loss: 0.0507 - val_acc: 0.9850
-Epoch 6/10
- - 66s - loss: 0.1202 - acc: 0.9632 - val_loss: 0.0513 - val_acc: 0.9846
-Epoch 7/10
- - 66s - loss: 0.1157 - acc: 0.9640 - val_loss: 0.0455 - val_acc: 0.9876
-Epoch 8/10
- - 66s - loss: 0.1042 - acc: 0.9676 - val_loss: 0.0439 - val_acc: 0.9865
-Epoch 9/10
- - 67s - loss: 0.0995 - acc: 0.9693 - val_loss: 0.0404 - val_acc: 0.9882
-Epoch 10/10
- - 65s - loss: 0.0908 - acc: 0.9713 - val_loss: 0.0383 - val_acc: 0.9886
-</pre>
-
-<p>we have trained our model on 10 epochs.20 % data has been set aside for validation.</p>
-
-
-{% highlight python %}
-plt.plot(history.history['acc'], label='train')
-plt.plot(history.history['val_acc'], label='test')
-plt.legend()
-{% endhighlight %}
-<br/>
-<img src="{{site.baseurl}}{{"../assets/Mnist/acc.png" }}" >
-<p>The above graph clearly indicates how out model performs  both on the test set and validation set.we have used 20% of our training data as our validation set</p>
-<p>Clearly our model performs well on the train set with accuracy of about <code>97.13%</code> and on our validation set
-<code>98.86%</code>>.Overfitting occours when accuracy on the train data is higher than the validation dataset or the test dataset</p>
-
-<hr>
-<h1>Predictions</h1>
-<p>Now we will check our predictions on the testing dataset .lets verify by classifying one image from the dataset as well as plottting it.</p>
-<p>But before predicting our output we need to transform our test data into format data and do some preprocessing i.e normalizing pixel intensities.</p>
-
-{% highlight python %}
-Digits_test = Digits_test/255.0
-Digits_test = Digits_test.values.reshape(-1,28,28,1)
-{% endhighlight %}
-
-{% highlight python %}
-plt.imshow(Digits_test[4][:,:,0])
-{% endhighlight %}
-
-<img src="{{site.baseurl}}{{"../assets/Mnist/prediction.png"}}">
-<p>Clearly the image shows that the image is that of number 3.Lets verify it by predciting it</p>
-{% highlight python %}
-label = model.predict(Digits_test[4].reshape(-1,28,28,1))
-print label
-{% endhighlight %}
-<pre class="output">
-    array([[1.35892244e-11, 6.63674093e-09, 1.89812010e-06, 9.99997854e-01,
-        5.45060850e-13, 7.55617506e-08, 2.06700043e-12, 1.03831745e-07,
-        1.64455578e-08, 2.63139732e-09]], dtype=float32)
-</pre>
-<p>In the last layer of Convolutional Neural Networks ,we have used a softmax classifier.It output probabilities of various classes i.e Ten probabilities coressponding to digits <code>0-9</code>.If you observe carefully the index 3 of the array has the probability 0.99 which is the number 3 class of our dataset.</p>
-</div>
+<b>Some feature columns are explained as below:</b>
+<p>
+<code>genre</code>:states the genre of the film along with the genre id i.e comedy,drama <br>
+<code>budget</code>:budget of the movie <br>
+<code>homepage</code>:url of the movie website <br>
+<code>keywords</code>:indicates the plot of keywords which define the movies <br>
+<code>genre</code>:states the genre of the film along with the genre id i.e comedy,drama <br>
+<code>original_language</code>:s original language in which movie was produced <br>
+<code>popularity</code> : Popularity of movie <br>
+<code>vote_avg</code> : Average votes given to that movie <br>
+<code>vote_count</code> : total no of votes given to that movie <br>
+</p>
+<p>We will be exploring many of the columns later in the notebook and also understand what they</p>
 
 
 
