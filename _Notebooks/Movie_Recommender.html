@@ -258,7 +258,22 @@ sns.countplot(y=data_movies['original_language'],data=data_movies)
 
 <img src="{{site.baseurl}}{{"../static_assets/Recommender_Systems/Languages.png" }}" >
 
+<h5> <b>1.2 Popular Genres</b></h5>
 
+<p>In this section we will analyze which genre is most common among movies. i.e on which genre most of the movies are based.</p>
+{% highlight python %}
+import ast
+genres_movies = dict()
+for movies in data_movies['genres']:
+    movie = ast.literal_eval(movies)
+    for genre in movie:
+        if(genre['name'] not in genres_movies.keys()):
+            genres_movies[genre['name']] = 1
+        else:
+            genres_movies[genre['name']] = genres_movies[genre['name']]+1           
+{% endhighlight %}                   
+
+<img src="{{static.url}}{{"../static_assets/Recommender_Systems/genres.png"}}" alt="">
 </div>
 </div>
 </div>
