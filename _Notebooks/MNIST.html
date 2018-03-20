@@ -377,7 +377,7 @@ plt.plot(history.history['val_acc'], label='test')
 plt.legend()
 {% endhighlight %}
 <br/>
-<img src="{{site.baseurl}}{{"../assets/Mnist/acc.png" }}" >
+<img src="{{site.baseurl}}{{"../static_assets/Mnist/acc.png" }}" >
 <p>The above graph clearly indicates how out model performs  both on the test set and validation set.we have used 20% of our training data as our validation set</p>
 <p>Clearly our model performs well on the train set with accuracy of about <code>97.13%</code> and on our validation set
 <code>98.86%</code>>.Overfitting occours when accuracy on the train data is higher than the validation dataset or the test dataset</p>
@@ -396,7 +396,7 @@ Digits_test = Digits_test.values.reshape(-1,28,28,1)
 plt.imshow(Digits_test[4][:,:,0])
 {% endhighlight %}
 
-<img src="{{site.baseurl}}{{"../assets/Mnist/prediction.png"}}">
+<img src="{{site.baseurl}}{{"../static_assets/Mnist/prediction.png"}}">
 <p>Clearly the image shows that the image is that of number 3.Lets verify it by predciting it</p>
 {% highlight python %}
 label = model.predict(Digits_test[4].reshape(-1,28,28,1))

@@ -242,52 +242,24 @@ None
 </p>
 <p>We will be exploring many of the columns later in the notebook and also understand what they</p>
 
+<hr>
+
+<h1>Exploratory Data Analysis</h1>
+In this section we will be analyzing the feature columns , their distrubution over the dataset and what insigths do we get from the plots or charts
 
 
+<h5> <b>1.1 Original language</b></h5>
+<p>Lets find out what is most popular language in which films are produced</p>
+    
+{% highlight python %}
+fig = plt.figure(figsize=(8,8))
+sns.countplot(y=data_movies['original_language'],data=data_movies)
+{% endhighlight %}
+
+<img src="{{site.baseurl}}{{"../static_assets/Recommender_Systems/Languages.png" }}" >
 
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
 </div>
             </div>
