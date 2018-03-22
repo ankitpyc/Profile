@@ -7,3 +7,23 @@
 	align-items: center;
 
 }
+.github_button{
+padding: 10px;
+    width: 50%;
+    border: 1px solid #dfdfdf;
+    color: #2eec6c;
+    font-size: medium;
+    border-bottom-right-radius: 0px;
+    font-weight: bold;
+    border-top-right-radius: 0px;
+}
+.notebook_button{
+	background: black;
+    padding: 10px;
+    color: white !important;
+    border-radius: 2px;
+    font-weight: bold;
+    width: 50%;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+	}

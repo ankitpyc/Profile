@@ -2,10 +2,10 @@
 title: Projects
 ---
 
-<b>Check out some of My  Cool Web and Machine Learning Projects</b>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../css/nav.css">
+<link rel="stylesheet" href="../css/Projects.css">
 <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -21,12 +21,7 @@ padding: 10px;
 		display: flex;
 		flex-wrap: true;
 	}
-	.notebook_button{
-	background: black;
-    padding: 10px;
-    color: white !important;
-    border-radius: 2px;
-	}
+	
 </style>
   <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
             <ul class="nav sidebar-nav">
@@ -76,18 +71,33 @@ padding: 10px;
                 <a href=""> <i class="fa fa-1x fa-gmail"></i> </a>
             </div>
         </nav>
+ <div style="background: #f9a5a5;
+    color: white;
+    font-weight: 100 !important;
+    padding: 10px;
+    font-size: medium;"><b>Check out some of My  Cool Web and Machine Learning Projects</b>
+</div>       
 <div class="card_layouts container">
 {% for projects in site.project_details %}
 	<div class="row">
 
   <div class="col-md-4 col-xs-12 col-sm-12">
     <div class="project_card">
-    	<div class="project_card_info">    <img style="width: 100%;" src="{{projects.image_path}}" alt="{{ project.title }}">
-    	{{projects.title}}</a></h2>
+         <img style="width: 100%;" src="{{projects.image_path}}" alt="{{ project.title }}">
+    	<div style="display: flex;flex-direction: column;" class="project_card_info">   
+    	
+        <h4>{{projects.title}}</h4>
 
     {{ projects.content }}
+    <div  style="
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    text-align: center;
+"><a class="github_button" href="http://www.github.com">Github &nbsp; <i class="fa fa-1x fa-github"></i></a>
+<a class="notebook_button" href="{{site.baseurl}}{{projects.project_path}}">Jupyter Notebook &nbsp; <i class="fa fa-1x fa-book"></i></a></div>
 
-<a class="notebook_button" href="{{site.baseurl}}{{projects.project_path}}">Jupyter Notebook</a>
   </div>
   </div>
 
