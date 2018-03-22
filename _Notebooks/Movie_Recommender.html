@@ -274,6 +274,24 @@ for movies in data_movies['genres']:
 {% endhighlight %}                   
 
 <img src="{{static.url}}{{"../static_assets/Recommender_Systems/genres.png"}}" alt="">
+
+
+<h1>Building our Engine</h1>
+
+<p>As we have already seen a couple of techniques for building recommendation engines we will be targetting a content based recommendation engine. we will be utilizing the keywords and plot of the movies to recommend the Movies.Lets start</p>
+
+<h5>1.1 Cleaning of Keywords</h5> 
+<p>Keywords will play an important role in the functioning of the engine. Indeed, recommendations will be based on similarity between films and to gauge such similarities, I will look for films described by the same keywords. Hence, the content of the plot_keywords variable deserves some attention since it will be extensively used.</p>
+
+<h6>1.1.1 Reducing words to their roots</h6>
+<p>we will be reducing words to their roots . This will help us to better infer from our model </p>
+
+
+{% highlight python %}
+
+
+
+{% endhighlight %}        
 </div>
 </div>
 </div>
