@@ -1,6 +1,6 @@
 ---
 title: HandWritten Digits Recognition
-image_path: https://cdn-images-1.medium.com/max/672/1*_R6Qhi8dbLe8jvVKlGdHYw.png
+image_path: https://cdn-images-1.medium.com/max/2000/1*9qGFK0jjigADvy4BF_PZ_A.jpeg
 project_path : Mnist-part-2.html
 
 ---
