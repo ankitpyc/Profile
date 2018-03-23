@@ -11,13 +11,24 @@ title: Projects
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <style type="text/css">
 	.project_card {
-       margin: 4% auto;
+        border-radius: 4px;
+
+  margin: 4% 3%;
     border: 1px solid #dfdfdf;
 }
+*{
+    font-family : 'Ubuntu';
+}
+p{
+    line-height: 1.5;
+}
 .project_card_info{
+
+        margin: 3% 3%;
 padding: 10px;
 }
 	.card_layouts{
+        margin-top: 4%;
 		display: flex;
 		flex-wrap: true;
 	}
@@ -78,15 +89,16 @@ padding: 10px;
     font-size: medium;"><b>Check out some of My  Cool Web and Machine Learning Projects</b>
 </div>       
 <div class="card_layouts container">
-{% for projects in site.project_details %}
-	<div class="row">
+        <div class="row">
 
-  <div class="col-md-4 col-xs-12 col-sm-12">
+{% for projects in site.project_details %}
+
+  <div class="col-md-5 col-md-offset-1 col-xs-12 col-sm-12">
     <div class="project_card">
          <img style="width: 100%;" src="{{projects.image_path}}" alt="{{ project.title }}">
     	<div style="display: flex;flex-direction: column;" class="project_card_info">   
     	
-        <h4>{{projects.title}}</h4>
+        <h3>{{projects.title}}</h3>
 
     {{ projects.content }}
     <div  style="
@@ -100,9 +112,9 @@ padding: 10px;
 
   </div>
   </div>
-
-  {% endfor %}	
 </div>
+  {% endfor %}	
+
 </div>
 
 
