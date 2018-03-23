@@ -329,7 +329,7 @@ data['cleaned_reviews']
 
 
 <p>Now we have seen how will be dealing with raw reviews,Lets apply it to the whole sentiments data.</p>
-
+<hr>
 <h2>Sentiement Analysis and Predictive Modelling</h2>
 
 <p>Now lets clean all the reviews by applying the <code>clean_reviews</code> to all sentiments and create a new column  in the dataframe 'cleaned_reviews'</p>
@@ -351,14 +351,111 @@ In Natural Language Processing there are several techniques or methods to anayze
 The bag-of-words model is a way of representing text data when modeling text with machine learning algorithms.
 
 The bag-of-words model is simple to understand and implement and has seen great success in problems such as language modeling and document classification.</p>
-<h3>Count Vectorizer</h3>
-<p></p>
+<h3>TFIDF</h3>
+<p>TFIDF(Term frequency inverse document frequency) is also one of the techniques for dealing with text data.In Bag of Words model,we simply count the occourence of words and simply write the count at a partiucular index in the feature vector . But since we are only using count , words which are rare in the reviews will have less impact on predicting the sentiment . TFIDF measures the number of times that words appear in a given document(Term Frequency).The Idf term is the total occourence of a word in all documents to total no of documents in the dataset.</p>
+<img src="https://deeplearning4j.org/img/tfidf.png" alt="">
 
-<p></p>
+<p>Now we will be buiding a sklearn pipeline to use both the Bag of Words and Tfidf to calculate feature vectors</p>
+<hr>
+<h2>Building a Sentiment Classifier</h2>
 
 
+{% highlight python %}
+from sklearn.pipleline import pipeline
+from sklearn.feature_extraction  import Tfidf,CountVectorizer
+{% endhighlight %}        
+
+<p> <code>Tfidf</code> and <code>CountVectorizer</code> are the sklearn implementation of Tfidf and Bag of Words implementation of sklearn. </p>
+
+
+{% highlight python %}
+BOW = CountVectorizer(max_features=5000)
+BOW_Features = BOW.fit_transform((data['cleaned_reviews'])) 
+{% endhighlight %}     
+
+{% highlight python %}
+BOW_Features
+{% endhighlight %}
+
+<pre class="output">
+<156060x5000 sparse matrix of type '<type 'numpy.int64'>'with 524767 stored elements in Compressed Sparse Row format>
+</pre>
+
+<p>We have got a sparse matrix of 156000x5000 wherer each row corresponds to a single document and a feature vector of 5000 features. <code>CountVectorizer</code> allows us choose an arbitrary size of feature vector</p>
+
+<p>Now we will fit a tfidf vectorizer on the bag of words feature</p>
+
+
+{% highlight python %}
+tfidf = Tfidf()
+tfidf_features = tfidf.fit_transform(max_features = 5000)
+tfidf_features
+{% endhighlight %}
+<pre class="output">
+<156060x2000 sparse matrix of type '<type 'numpy.float64'>'with 419006 stored elements in Compressed Sparse Row format> 
+</pre>        
+
+<p>Now we will train a naive bayes classifier for sentiment analysis.Naive Bayes is very popular for text classification and is used popularly.</p>
+<hr>
+<h2>Train Test Split</h2>
+
+<p>We will split our whole tfidf sparse matrix into train and test using sklearn's <code>train_test_split</code></p>
+{% highlight python %}
+
+from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(tfidf_features, data['Sentiment'], test_size=0.33, random_state=42)
+{% endhighlight %}        
+<p>Lets train our model on Multinomial Naive Bayes which is used for Multiclassification Problem.</p>
+
+
+{% highlight python %}
+from sklearn.naive_bayes import MultinomialNB()
+model_naive = MultinomialNB()
+model_naive.fit(X_train,y_train)
+{% endhighlight %}        
+
+<p>Now lets predict the values in the test set and see its accuracy</p>
+
+{% highlight python %}
+predictions = model_naive.predict(X_test)
+accuracy(y_test,predictions)
+{% endhighlight %}        
+<pre class="output">
+0.562
+</pre>
+<p>Its seems like we have acheived a good accuracy better than random guessing.Naive bayes is not performing that well in sentiment analysis.</p>
+<hr>
+<h2>Random Forest Classifier</h2>
+
+<p>As we have seen naive bayes is not giving better predictions,Lets use random forest an ensemble of Decision Trees.</p>
+
+
+{% highlight python %}
+from sklearn.ensemble import RandomForestClassifier
+model_randomf = RandomForestClassifier(n_estimators=100)
+model_randomf.fit(X_train,y_train)
+{% endhighlight %}        
+
+<p>Lets check the predictions and acuracy of our random forest model.</p>
+
+
+{% highlight python %}
+
+predictions = model_randomf.predict(X_test)
+print "accuracy :",accuracy_score(y_test,predictions)
+{% endhighlight %}        
+<pre class="output">
+accuracy : 0.6189708737864078
+</pre>
+<p>Whoo ! a 5% increment in accurcy using random forest.we have improved our model performance significantly using random forest.</p>
+
+<hr>
+<h2>Predictions on Raw reviews</h2>
+
+At last we come to this section where we will be using random tweets of movie reviews to judge our model performance and to check wether our model generalizes over real data or not
 
 </div>
+
 
 
 </div>
