@@ -1,5 +1,5 @@
 ---
-title : Movie Recommender
+title :MNIST DIGIT Predictor
 permalink : /Projects/:title
 ---
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -32,9 +32,9 @@ permalink : /Projects/:title
                 <div class="row">
                     <div style="padding: 0px;" class="col-lg-12">
                        <div style="height: 50%;width: 100%;position: relative; " class="image_overrelay">
-<div class="heading_container"><h1 class="text-center" style="color:white;">Sentiment Analysis</h1>
+<div class="heading_container"><h1 class="text-center" style="color:white;">Building MNIST App using Flask</h1>
 </div>
-<img class="image-banner" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkXpmvxmxrmY5LIqh2Q4NOGdkbpBo-3SsXEGwiF5s0tkiwoqAY">  
+<img class="image-banner" src="https://cdn-images-1.medium.com/max/2000/1*9qGFK0jjigADvy4BF_PZ_A.jpeg">  
 
 </div>
                    
@@ -43,15 +43,158 @@ permalink : /Projects/:title
                  <div class="row">
                     <div class="col-md-8 col-md-offset-2 col-sm-8 col-md-offset-2 col-xs-12 ">
 <hr>
-<h2>Real Life Application</h2>
+<h2>About the Project</h2>
 
-<p>In this part of Digit Recognition we will be building a  real life Digit recognizer</p>
+<p>In this part of Digit Recognition we will be building a Digit recognizer App where we will be building a  flask web app so that we could draw any no and it will detect the number drawn on the screen</p>
+
+<hr>
+<h2>Uisng a Trained Model</h2>
+
+<p>As we have seen in part 1 ,we trained a Convolutional Neural Network on MNIST dataset and acheived a very decent accuracy on the train and test set. </p>
+
+<p>We later save the model using keras model's <code>to_json</code> . we could also use python pickle module to save the model in binary format and later restore the model whenever we need it. </p>
+
+
+{% highlight python %}
+model_json = model.to_json()
+#open a json file and write models configurations in json format
+with open("model.json", "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+model.save_weights("model.h5")
+print("Saved model to disk")
+{% endhighlight %}		
+
+<pre class="output">Saved model to disk</pre>
+
+
+<hr>
+<h2>Data Preprocessing</h2>
+<p>Now as we have trained our model we could just pickup any handwritten digit image and our model will predict the correct label with flying colors !! <i>The sad part is no.</i></p>
+We will have to do some transformations  while feeding input to the image.
 
 
 
+
+<p>First we will be installing flask on our system using pip python package manager.All the installation steps required for installation are mentioned in the <a href="">Flask</a>Official Website</p>.Once Flask have been installed,we ill be setting our templates and app.py
+
+<p>The Directory structure of our app is as follows</p>
+
+<img src="../static_assets/Mnist_part_2/structure.png" alt="">
+
+<p>where the static folder contains all the js,css files where as model is used to store the saved model. Inside the model folder we have a file called <code>load_model.py</code></p>.
+
+<p>This file compile the model and instead of learning the new weights and training the model we could use previously learned weights.</p>
+
+
+{% highlight python %}
+
+###############
+model_load.py
+##############
+
+import numpy as np
+import keras.models
+from scipy.misc import imread, imresize,imshow
+import tensorflow as tf
+
+from keras.models import Sequential
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D,MaxPool2D
+
+def init():
+    model = Sequential()
+    model.add(Conv2D(64,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
+    model.add(MaxPool2D())
+    model.add(Conv2D(32,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
+    model.add(MaxPool2D())
+    model.add(Conv2D(16,(3,3),padding = 'Same',activation ='relu', input_shape = (28,28,1)))
+    model.add(MaxPool2D())
+    model.add(Dropout(0.5))
+    model.add(Flatten())
+    model.add(Dense(128))
+    model.add(Dropout(0.5))
+    model.add(Dense(10,activation = "softmax"))   
+    #load woeights into new model
+    model.load_weights("model.h5")
+    print("Loaded Model from disk")
+
+    #compile and evaluate loaded model
+    model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
+    #loss,accuracy = model.evaluate(X_test,y_test)
+    #print('loss:', loss)
+    #print('accuracy:', accuracy)
+    graph = tf.get_default_graph()
+
+    return model, graph
+
+{% endhighlight %}
+
+
+<p>Now as you can see model is compiled but not fitted .Only the weights learned are reused to compile the model.</p>		
+<hr>
+
+<h2>Setting up the Server</h2>
+
+<p>Now we will be setting the starter file or entry file of the app <code>start.py</code>.This file contains roting and request handlinglogic.we will be focusing on the preprocessing part. </p>
+
+
+{% highlight python %}
+
+from flask import Flask, render_template, request
+from scipy.misc import imsave, imread, imresize
+import numpy as np
+import keras.models
+import re
+import base64
+import sys 
+import os
+from load_model import *
+
+app = Flask(__name__)
+global model, graph
+model, graph = init()
+
+#setting index route    
+@app.route('/')
+def index():
+    return render_template("index.html")
+#request handling logic for each and every request
+@app.route('/predict/', methods=['GET','POST'])
+def predict():
+    # get data from drawing canvas and save as image
+    parseImage(request.get_data())
+
+    # read parsed image back in 8-bit, black and white mode (L)
+    x = imread('output.png', mode='L')
+    x = np.invert(x)
+    x = imresize(x,(28,28))
+
+    # reshape image data for use in neural network
+    x = x.reshape(1,28,28,1)
+    with graph.as_default():
+        out = model.predict(x)
+        print(out)
+        print(np.argmax(out, axis=1))
+        response = np.array_str(np.argmax(out, axis=1))
+        return response 
+ #Parsing images for preprocessing,decoding of base64 and converiting into  
+def parseImage(imgData):
+    # parse canvas bytes and save as output.png
+    imgstr = re.search(b'base64,(.*)', imgData).group(1)
+    with open('input.png','wb') as output:
+        output.write(imgstr.decode('base64'))
+
+if __name__ == '__main__':
+    app.debug = True
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+
+{% endhighlight %}
+
+<p>The App is ready to be served in Localhost</p>		
 </div>
-
-
 </div>
 </div>
             </div>
