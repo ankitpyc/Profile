@@ -188,12 +188,36 @@ def parseImage(imgData):
 
 if __name__ == '__main__':
     app.debug = True
+    #setting the port to serve 
     port = int(os.environ.get("PORT", 5000))
+    #start the main App
     app.run(host='0.0.0.0', port=port)
 
 {% endhighlight %}
 
-<p>The App is ready to be served in Localhost</p>		
+<p>Now the Template of the app has canvas element which takes the input from user .The image drawn on the Canvas is served as a Base64 encoded string is posted to server. </p>
+
+<p>The index root acts has a separate function for post at the index route.The Parse image function takes the base64 encoded string,converts it into image ,reshapes into the  form  Keras would expect  the input to be <code>[no_of_sample,height,weight,channel]</code>.</p>
+<p>Now the image <code>output.png</code> written by the parse image function is read by the program.</p>
+
+<p>	Now the App  reads the image and keras <code>model.predict</code> function takes the reshaped image of the form <code>[-1,28,28,1]</code>.</p>
+
+
+
+<h2>Running the App</h2>
+
+<p>The App is ready to be served in Localhost.go to to the terminal and type the following </p>
+<pre class="output">
+export FLASK_APP = //starter script.py
+python -m flask run
+</pre>
+
+<p>The App takes a little time to run,because model is loaded and weights are added.</p>
+
+<img src="../static_assets/Mnist_part_2/App_demo.png" alt="">
+
+<p>A live version of my app is deployed to heroku. <a href="">Try it out</a> </p>
+
 </div>
 </div>
 </div>
