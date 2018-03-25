@@ -1,0 +1,144 @@
+*{
+  font-family: 'Open Sans', sans-serif;
+
+}
+
+/*common styles for the app*/
+#root{
+  width: 100%;
+  height: 100%
+}
+body{
+  height: 100%;
+}
+.App {
+text-align: center;
+flex : 1;
+height: 100%;
+width: 100%;
+display: flex;
+flex-direction:row;
+}
+/*indivisual section styles*/
+.sidebar-profile{
+height: 100vh;
+display: inline-flex;
+width: 50%;
+background: #388A82;
+justify-content: center;
+align-content: center;
+}
+
+.back_div{
+  height: 100%;
+width: 50%;
+background: #388a82a3;
+position: absolute;
+}
+
+/*navbar navigation*/
+.nav{
+  font-size: medium;
+width: 100%;
+    display: flex;
+    -ms-flex-pack: end;
+    justify-content: flex-start;
+}
+.nav_links{
+  font-size: medium;
+  display: -ms-flexbox;
+    display: flex;
+    width: 90%;
+    -ms-flex-pack: distribute;
+    justify-content: flex-end;
+    color: white;
+    align-items: flex-end;
+}
+li{
+  list-style: none;
+  margin: 2% 4% !important;
+}
+.profile_center{
+  height: 100px;
+  width: 100px;
+  margin-top: 27%;
+  border-radius: 200px;
+}
+.para_intro{
+      color: white;
+    padding: 20px;
+    font-size: large;
+    background: #7aa89947;
+}
+
+/*sidebar details panel*/
+.sidebar-photo{
+height: 100vh;
+display: inline-flex;
+background: white;
+width: 50%;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+}
+
+/*styles for background profile image*/
+.background_profile_img{
+  height: 100vh;
+  width: 100%;
+}
+
+.box{
+  display: flex;
+  width: 60%;
+  height: 140px;
+  background: white;
+  margin-top: 4%;
+  border : 1px solid #dfdfdf;
+  display: flex;
+}
+.box_img{
+  height :100px;
+  width: 100px;
+}
+.box-sidebar_img{
+justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 40%;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    background: #F0F2F2;
+    height: inherit;
+}
+.sty{
+  text-align: left;
+  padding: 6px;
+  height: 100%;
+  width: 50%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+h5{
+  text-transform: uppercase;
+  color: #797979;
+  margin: 3px 3px;
+}
+.button_project{
+    box-shadow: none;
+    height: 30px;
+    width: 70px;
+    border: 1px solid #0000FF;
+    background: none;
+    border-radius: 200px;
+    font-size: smaller;
+ 
+}
+.button_project:hover{
+  cursor: pointer;
+  background: #0000FF;
+  color: white;
+}
+

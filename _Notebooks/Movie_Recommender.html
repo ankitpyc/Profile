@@ -5,6 +5,8 @@ permalink : /Projects/:title
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../css/nav.css">
+ <link rel="stylesheet" href="../css/blog.css">   
+
 <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -276,22 +278,152 @@ for movies in data_movies['genres']:
 <img src="{{static.url}}{{"../static_assets/Recommender_Systems/genres.png"}}" alt="">
 
 
-<h1>Building our Engine</h1>
 
-<p>As we have already seen a couple of techniques for building recommendation engines we will be targetting a content based recommendation engine. we will be utilizing the keywords and plot of the movies to recommend the Movies.Lets start</p>
+<h1>Recommender Systems</h1>
+<p>Recommendation Systems are of mainly 3 different types.Each one offers a different level of personalization.Most recommender systems take either of two basic approaches: collaborative filtering or content-based filtering. Other approaches (such as hybrid approaches) also exist.</p>
+<ul>
+<li>
+<h4>Collaborative Filtering</h4>
+<p>In Collaborative Filtering,recommendations are based on prior user experience.Collaborative filtering uses group knowledge to form a recommendation based on like users.</p>
+</li>
+<li>
+<h4>Content Based Filtering</h4>
+<p>Content-based filtering constructs a recommendation on the basis of a user's behavior.This defineitely requires user browser history ,what kinds of content and blogs he is reading and recommends based on the History.Suppose we were to build a blog recommendation and if a particular user reads blogs about linux , the system would recommend blogs like operating system , ubuntu and other unix based operating.This is what user may like.</p>
+</li>
+<li>
+<h4>Hybrid Approach</h4>
+<p>In hybrid based Approach , that combines both the Collaborative and Content based approach is more complex as compared to both above.The Content based filtering could be used if the user data is not mature enough to be compared with other user data and give a cold start to the system but slighlt shift towards Collaborative approach when the user data grows enough. </p>
+</li>
+</ul>
 
-<h5>1.1 Cleaning of Keywords</h5> 
-<p>Keywords will play an important role in the functioning of the engine. Indeed, recommendations will be based on similarity between films and to gauge such similarities, I will look for films described by the same keywords. Hence, the content of the plot_keywords variable deserves some attention since it will be extensively used.</p>
 
-<h6>1.1.1 Reducing words to their roots</h6>
-<p>we will be reducing words to their roots . This will help us to better infer from our model </p>
+<hr>
+
+
+<h1>Weighted Voting Approach</h1>
+
+<p>Weighted Voting Approach is simple common approach which doesnot takes any user activity into account.
+It simply uses a predefined ranking formulae to rate movie based on thier votes,views etc.
+</p>
+<p>If we peek into our data,we have a lot of features like 
+  <code>Vote Average</code>,
+  <code>Vote Count</code>,<code>Popularity</code></p>.After a lot of search for IMDB genuine Approach to rate movies, i found one on a [Answer](https://www.quora.com/How-does-IMDbs-rating-system-work)written in quora.I will be using that approach for movies rating for recommendation.
+
+
+<h2>Building our Simple Engine</h2>
+<p>The rating Formuale for IMDB is</p>
+<br>
+<b>weighted rating (WR) = (v ÷ (v+m)) × R + (m ÷ (v+m)) × C where:</b>
+<code>R </code>: average for the movie (mean) = (Rating) <br>
+<code>v</code>:number of votes for the movie = (votes) <br>
+<code>m</code>: minimum votes required to be listed in the Top 250 (currently 25000) <br>
+<code>C</code> :the mean vote across the whole report (currently 7.0)
+
+<p>Now lets peek again into our movies data </p>
+
+{% highlight python %}
+data_movies.head(1)
+{% endhighlight %}   
+
+<div style="overflow: scroll;">
+   <table border="1" class="table table-responsive table-bordered">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>budget</th>
+      <th>genres</th>
+      <th>homepage</th>
+      <th>id</th>
+      <th>keywords</th>
+      <th>original_language</th>
+      <th>original_title</th>
+      <th>overview</th>
+      <th>popularity</th>
+      <th>production_companies</th>
+      <th>production_countries</th>
+      <th>release_date</th>
+      <th>revenue</th>
+      <th>runtime</th>
+      <th>spoken_languages</th>
+      <th>status</th>
+      <th>tagline</th>
+      <th>title</th>
+      <th>vote_average</th>
+      <th>vote_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>237000000</td>
+      <td>[{"id": 28, "name": "Action"}, {"id": 12, "nam...</td>
+      <td>http://www.avatarmovie.com/</td>
+      <td>19995</td>
+      <td>[{"id": 1463, "name": "culture clash"}, {"id":...</td>
+      <td>en</td>
+      <td>Avatar</td>
+      <td>In the 22nd century, a paraplegic Marine is di...</td>
+      <td>150.437577</td>
+      <td>[{"name": "Ingenious Film Partners", "id": 289...</td>
+      <td>[{"iso_3166_1": "US", "name": "United States o...</td>
+      <td>2009-12-10</td>
+      <td>2787965087</td>
+      <td>162.0</td>
+      <td>[{"iso_639_1": "en", "name": "English"}, {"iso...</td>
+      <td>Released</td>
+      <td>Enter the World of Pandora.</td>
+      <td>Avatar</td>
+      <td>7.2</td>
+      <td>11800</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+  
+<p>Lets calulate the <code>mean vote</code>,<code>average vote</code></p>
+
+
+{% highlight python %}
+votes_counts = data_movies[data_movies['vote_count'].notnull()]['vote_count'].astype('int')
+# we will be using minimum votes as 95% percentile of the maximum votes recieved
+minimum_votes = votes_count.quantile(.95)
+print 'minimum_votes :',minimum_votes
+{% endhighlight %}   
+<pre class="output">
+ 455 
+</pre>
 
 
 {% highlight python %}
 
+mean_votes = data_movies[data_movies['votes_avg'].notnull()]['votes_avg'].mean()
+print 'minimum_votes :',mean_votes
+
+{% endhighlight %}    
+   
+<pre class="output">
+  
+</pre>
 
 
-{% endhighlight %}        
+
+
+<hr/>
+<h2>Content Based Filtering</h2>
+<p>As we have already seen a couple of techniques for building recommendation engines we will be targetting a content based recommendation engine. we will be utilizing the keywords and plot of the movies to recommend the Movies.Lets start</p>
+
+<h4>1.1 Cleaning of Keywords</h4> 
+<p>Keywords will play an important role in the functioning of the engine. Indeed, recommendations will be based on similarity between films and to gauge such similarities, I will look for films described by the same keywords. Hence, the content of the plot_keywords variable deserves some attention since it will be extensively used.</p>
+
+<h4>1.1.1 Reducing words to their roots</h4>
+<p>
+We will be reducing words to their roots . This will help us to better infer from our model.Common
+NLP methodolgies are Stemming and Lemmatization. 
+</p>
+
+
+
+{% include footer.html %}
 </div>
 </div>
 </div>
@@ -300,91 +432,8 @@ for movies in data_movies['genres']:
         <!-- /#page-content-wrapper -->
 
     </div>
-<style type="text/css">
-*{
-font-family: 'Ubuntu';
-line-height: 1.6;
-}
-@media only screen and (max-width: 600px) {
-    p{
-    	font-size: 13px !important;
-    }
-	h1{
-	font-size : 23px;
-	}
-}
-.image-banner{
-        width: 100%;
-    height: 100%;
-    max-width: 100%;
-    background-size: cover !important;
-}
-pre{
-	font-size: 15px;
-	margin-top: 2% auto;
-	display: block;
-    margin-top: 0;
-    margin-bottom: 1rem;
-    border: none;
-    line-height: 1.5;
-    color: #292b2c;
 
-}
-img{
-    max-width: 100%;
-}
-p {
-font-size: 14px !important;
-    color: #333232;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    line-height: 1.5;
-}
-	.Posts{
-		padding :20px;
-		margin: 8%;
 
-	}
-	body{
-		line-height: 1.5;
-		padding: 0px;
-		margin:0px;
-	}
-	.output{
-		color: white;
-		background: black;
-	}
 
-</style>
-<script type="text/javascript">
-	$(document).ready(function () {
-  var trigger = $('.hamburger'),
-      overlay = $('.overlay'),
-     isClosed = false;
-
-    trigger.click(function () {
-      hamburger_cross();      
-    });
-
-    function hamburger_cross() {
-
-      if (isClosed == true) {          
-        overlay.hide();
-        trigger.removeClass('is-open');
-        trigger.addClass('is-closed');
-        isClosed = false;
-      } else {   
-        overlay.show();
-        trigger.removeClass('is-closed');
-        trigger.addClass('is-open');
-        isClosed = true;
-      }
-  }
-  
-  $('[data-toggle="offcanvas"]').click(function () {
-        $('#wrapper').toggleClass('toggled');
-  });  
-});
-</script>
 </body>
 </html>
