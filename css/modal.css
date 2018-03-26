@@ -1,11 +1,28 @@
 .nav-tabs{
-	border-bottom: 0px !important;
+	    border-bottom: 0px !important;
+    display: flex;
+    justify-content: space-between;
 }
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
 border-bottom: 1px solid #dfdfdf;
 }
-
-
+.modal-header{
+  border-bottom: 0px;
+  text-align: left;
+}
+.modal-body{
+  position: relative;
+  padding: 15px;
+  margin-top: -10PX;
+}
+.nav-tabs>li>a{
+  margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    background: black;
+    color: white;
+}
 
 /*modal-charts*/
 #chart {
@@ -13,6 +30,7 @@ border-bottom: 1px solid #dfdfdf;
   height: 300px;
   margin: 30px auto 0;
   display: block;
+  margin-bottom: 2%;
 }
 #chart #numbers {
   width: 50px;
@@ -21,6 +39,7 @@ border-bottom: 1px solid #dfdfdf;
   padding: 0;
   display: inline-block;
   float: left;
+      margin-top: 14px;
 }
 #chart #numbers li {
   text-align: right;
@@ -35,21 +54,21 @@ border-bottom: 1px solid #dfdfdf;
   height: 30px;
 }
 #chart #numbers li span {
-  color: #eee;
+  color: #000;
   position: absolute;
   bottom: 0;
   right: 10px;
 }
-#chart #bars {
+#chart .bars {
   display: inline-block;
-  background: rgba(0, 0, 0, 0.2);
+  background: #fff;
   width: 600px;
   height: 300px;
   padding: 0;
   margin: 0;
   box-shadow: 0 0 0 1px #444;
 }
-#chart #bars li {
+#chart .bars li {
   display: table-cell;
   width: 100px;
   height: 300px;
@@ -57,7 +76,8 @@ border-bottom: 1px solid #dfdfdf;
   text-align: center;
   position: relative;
 }
-#chart #bars li .bar {
+
+#chart .bars li .bar {
   display: block;
   width: 70px;
   margin-left: 15px;
@@ -65,18 +85,18 @@ border-bottom: 1px solid #dfdfdf;
   position: absolute;
   bottom: 0;
 }
-#chart #bars li .bar:hover {
+#chart .bars li .bar:hover {
   background: #5AE;
   cursor: pointer;
 }
-#chart #bars li .bar:hover:before {
+#chart .bars li .bar:hover:before {
   color: white;
   content: attr(data-percentage) '%';
   position: relative;
   bottom: 20px;
 }
-#chart #bars li span {
-  color: #eee;
+#chart .bars li span {
+  color: #000;
   width: 100%;
   position: absolute;
   bottom: -2em;

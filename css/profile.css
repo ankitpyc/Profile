@@ -136,25 +136,21 @@ h5{
     font-size: smaller;
  
 }
+.button-profiles{
+  border: 0px;
+  background: none;
+}
 .button_project:hover{
   cursor: pointer;
   background: #0000FF;
   color: white;
-}
-.about_me{
-  text-align: left;
-    color: #a7a7a7;
-    line-height: 1.5;
-    padding: 10px;
-    margin: 2%;
-    font-size: larger;
 }
 @media only screen and (max-width: 600px) {
     .sidebar-profile{
       display: none;
     }
     .sidebar-photo{
-      width: 100%;
+      width :100%;
     }
 }
 
